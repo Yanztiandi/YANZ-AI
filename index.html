@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .container {
+            background: #1e1e1e;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background: #f7f7f8;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .chat-container {
+            background: #2d2d2d;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.user .avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message.bot .avatar {
+            background: #10a37f;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            margin: 0 12px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #374151;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode .message.bot .message-content {
+            background: #3a3a3a;
+            color: #e5e5e5;
+        }
+
+        .input-container {
+            padding: 20px 30px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.dark-mode .input-container {
+            background: #1e1e1e;
+            border-top-color: #3a3a3a;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f7f7f8;
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .input-wrapper {
+            background: #3a3a3a;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #667eea;
+            background: white;
+        }
+
+        body.dark-mode .input-wrapper:focus-within {
+            background: #2d2d2d;
+        }
+
+        #messageInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            outline: none;
+            color: #374151;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode #messageInput {
+            color: #e5e5e5;
+        }
+
+        #sendBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        #sendBtn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        #sendBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 18px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9ca3af;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body.dark-mode .chat-container::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 50px;
+        }
+
+        body.dark-mode .welcome-message {
+            color: #9ca3af;
+        }
+
+        .welcome-message h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        body.dark-mode .welcome-message h2 {
+            color: #e5e5e5;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode .modal-content {
+            background: #2d2d2d;
+            color: #e5e5e5;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .close-modal {
+            color: #9ca3af;
+        }
+
+        .settings-option {
+            margin-bottom: 20px;
+        }
+
+        .settings-option label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .export-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .export-note {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f9ff;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #374151;
+        }
+
+        body.dark-mode .export-note {
+            background: #1e3a5f;
+            color: #e5e5e5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header-buttons {
+                width: 100%;
+            }
+
+            .header-btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 YANZ AI</h1>
+            <div class="header-buttons">
+                <button class="header-btn" onclick="openSettings()">
+                    <span>⚙️</span> Settings
+                </button>
+                <button class="header-btn" onclick="openExport()">
+                    <span>📥</span> Export
+                </button>
+                <button class="header-btn" onclick="clearChat()">
+                    <span>🗑️</span> Clear
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <h2>Selamat Datang!</h2>
+                <p>Mulai percakapan dengan mengetik pesan di bawah</p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Ketik pesan Anda..." 
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button id="sendBtn" onclick="sendMessage()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Pengaturan</h3>
+                <button class="close-modal" onclick="closeModal('settingsModal')">×</button>
+            </div>
+            <div class="settings-option">
+                <label>🌙 Dark Mode</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-option">
+                <label>🔔 Suara Notifikasi</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="soundToggle" checked onchange="toggleSound()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-option">
+                <label>💾 Simpan Riwayat Chat</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="saveHistoryToggle" checked onchange="toggleSaveHistory()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📥 Export Chat</h3>
+                <button class="close-modal" onclick="closeModal('exportModal')">×</button>
+            </div>
+            <p style="margin-bottom: 20px; color: #6b7280;">Pilih format untuk mengekspor riwayat chat Anda:</p>
+            <div class="export-options">
+                <button class="export-btn" onclick="exportAsText()">
+                    📄 Text (.txt)
+                </button>
+                <button class="export-btn" onclick="exportAsJSON()">
+                    📋 JSON (.json)
+                </button>
+                <button class="export-btn" onclick="exportAsHTML()">
+                    🌐 HTML (.html)
+                </button>
+            </div>
+            <div class="export-note">
+                💡 <strong>Tips:</strong> File akan otomatis terdownload setelah Anda memilih format
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        let messages = [];
+        let soundEnabled = true;
+        let saveHistory = true;
+
+        // Audio context for notification sound
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playNotificationSound() {
+            if (!soundEnabled) return;
+
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        function loadSettings() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+            saveHistory = localStorage.getItem('saveHistory') !== 'false';
+
+            document.getElementById('darkModeToggle').checked = darkMode;
+            document.getElementById('soundToggle').checked = soundEnabled;
+            document.getElementById('saveHistoryToggle').checked = saveHistory;
+
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.getElementById('darkModeToggle').checked;
+            document.body.classList.toggle('dark-mode', isDark);
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        function toggleSound() {
+            soundEnabled = document.getElementById('soundToggle').checked;
+            localStorage.setItem('soundEnabled', soundEnabled);
+            if (soundEnabled) {
+                playNotificationSound();
+            }
+        }
+
+        function toggleSaveHistory() {
+            saveHistory = document.getElementById('saveHistoryToggle').checked;
+            localStorage.setItem('saveHistory', saveHistory);
+            
+            if (!saveHistory) {
+                sessionStorage.removeItem('chatMessages');
+            } else {
+                saveMessages();
+            }
+        }
+
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function openExport() {
+            if (messages.length === 0) {
+                alert('Tidak ada chat untuk diekspor!');
+                return;
+            }
+            document.getElementById('exportModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportAsText() {
+            let text = 'Chat History - YANZ AI\n';
+            text += '='.repeat(50) + '\n\n';
+            
+            messages.forEach((msg, index) => {
+                const sender = msg.isUser ? 'User' : 'YANZ AI';
+                text += `${sender}: ${msg.text}\n\n`;
+            });
+            
+            text += '='.repeat(50) + '\n';
+            text += `Exported: ${new Date().toLocaleString()}\n`;
+            
+            downloadFile(text, 'yanz-ai-chat-history.txt', 'text/plain');
+            closeModal('exportModal');
+            playNotificationSound();
+        }
+
+        function exportAsJSON() {
+            const data = {
+                exportDate: new Date().toISOString(),
+                totalMessages: messages.length,
+                messages: messages
+            };
+            
+            downloadFile(JSON.stringify(data, null, 2), 'yanz-ai-chat-history.json', 'application/json');
+            closeModal('exportModal');
+            playNotificationSound();
+        }
+
+        function exportAsHTML() {
+            let html = `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YANZ AI - Chat History Export</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f7f7f8; }
+        h1 { color: #667eea; text-align: center; }
+        .message { margin: 20px 0; padding: 15px; border-radius: 10px; }
+        .user { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-left: 20%; }
+        .bot { background: white; margin-right: 20%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .sender { font-weight: bold; margin-bottom: 5px; }
+        .footer { text-align: center; color: #6b7280; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+    <h1>🤖 YANZ AI - Chat History</h1>
+`;
+            
+            messages.forEach(msg => {
+                const sender = msg.isUser ? 'User' : 'YANZ AI';
+                const className = msg.isUser ? 'user' : 'bot';
+                html += `    <div class="message ${className}">
+        <div class="sender">${sender}</div>
+        <div>${msg.text}</div>
+    </div>
+`;
+            });
+            
+            html += `    <div class="footer">
+        <p>Exported on ${new Date().toLocaleString()}</p>
+        <p>Total Messages: ${messages.length}</p>
+    </div>
+</body>
+</html>`;
+            
+            downloadFile(html, 'yanz-ai-chat-history.html', 'text/html');
+            closeModal('exportModal');
+            playNotificationSound();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        function loadMessages() {
+            if (!saveHistory) return;
+            
+            const saved = JSON.parse(sessionStorage.getItem('chatMessages') || '[]');
+            if (saved.length > 0) {
+                messages = saved;
+                renderMessages();
+            }
+        }
+
+        function saveMessages() {
+            if (!saveHistory) return;
+            sessionStorage.setItem('chatMessages', JSON.stringify(messages));
+        }
+
+        function renderMessages() {
+            const welcomeMsg = chatContainer.querySelector('.welcome-message');
+            if (welcomeMsg) welcomeMsg.remove();
+
+            chatContainer.innerHTML = '';
+            messages.forEach(msg => {
+                addMessageToDOM(msg.text, msg.isUser, false);
+            });
+        }
+
+        function addMessageToDOM(text, isUser, shouldSave = true) {
+            if (shouldSave) {
+                messages.push({ text, isUser });
+                saveMessages();
+            }
+
+            const welcomeMsg = chatContainer.querySelector('.welcome-message');
+            if (welcomeMsg) welcomeMsg.remove();
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = isUser ? 'U' : 'YZ';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = text;
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatContainer.appendChild(messageDiv);
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = 'YZ';
+
+            const indicator = document.createElement('div');
+            indicator.className = 'message-content';
+            indicator.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(indicator);
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        function generateResponse(userMessage) {
+            const lowerMsg = userMessage.toLowerCase();
+
+            // Sapaan
+            if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('hi') || lowerMsg.includes('hello')) {
+                return 'Halo, saya YANZ, asisten yang siap membantu Anda di mana pun dan kapan pun!';
+            }
+            
+            if (lowerMsg.includes('apa kabar') || lowerMsg.includes('how are you')) {
+                return 'Baik. Ada yang bisa dibantu?';
+            }
+
+            // Identitas
+            if (lowerMsg.includes('siapa') && (lowerMsg.includes('kamu') || lowerMsg.includes('anda'))) {
+                return 'YANZ AI - asisten virtual untuk membantu Anda.';
+            }
+            
+            if (lowerMsg.includes('nama') && (lowerMsg.includes('kamu') || lowerMsg.includes('anda'))) {
+                return 'YANZ AI.';
+            }
+
+            // Kemampuan
+            if (lowerMsg.includes('bisa apa') || lowerMsg.includes('bisa bantu') || lowerMsg.includes('apa yang bisa')) {
+                return 'Saya bisa:\n• Menjawab pertanyaan\n• Kalkulasi matematika\n• Info waktu/tanggal\n• Rekomendasi (film, musik, buku)\n• Tips coding & kesehatan\n• Motivasi & jokes';
+            }
+
+            // Matematika
+            if (lowerMsg.includes('berapa') || lowerMsg.includes('hitung') || lowerMsg.includes('plus') || lowerMsg.includes('tambah') || lowerMsg.includes('kali') || lowerMsg.includes('bagi')) {
+                const numbers = userMessage.match(/\d+/g);
+                if (numbers && numbers.length >= 2) {
+                    const num1 = parseInt(numbers[0]);
+                    const num2 = parseInt(numbers[1]);
+                    
+                    if (lowerMsg.includes('tambah') || lowerMsg.includes('plus') || lowerMsg.includes('+')) {
+                        return `${num1 + num2}`;
+                    } else if (lowerMsg.includes('kurang') || lowerMsg.includes('minus') || lowerMsg.includes('-')) {
+                        return `${num1 - num2}`;
+                    } else if (lowerMsg.includes('kali') || lowerMsg.includes('×') || lowerMsg.includes('*')) {
+                        return `${num1 * num2}`;
+                    } else if (lowerMsg.includes('bagi') || lowerMsg.includes('÷') || lowerMsg.includes('/')) {
+                        return `${(num1 / num2).toFixed(2)}`;
+                    }
+                }
+            }
+
+            // Waktu
+            if (lowerMsg.includes('jam') || lowerMsg.includes('waktu') || lowerMsg.includes('tanggal') || lowerMsg.includes('hari')) {
+                const now = new Date();
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                
+                const day = days[now.getDay()];
+                const date = now.getDate();
+                const month = months[now.getMonth()];
+                const year = now.getFullYear();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                
+                return `${day}, ${date} ${month} ${year} - ${hours}:${minutes} WIB`;
+            }
+
+            // Cuaca
+            if (lowerMsg.includes('cuaca') || lowerMsg.includes('hujan') || lowerMsg.includes('panas')) {
+                return 'Tidak ada data cuaca real-time. Cek aplikasi cuaca lokal Anda.';
+            }
+
+            // Motivasi
+            if (lowerMsg.includes('motivasi') || lowerMsg.includes('semangat') || lowerMsg.includes('sedih') || lowerMsg.includes('lelah')) {
+                const motivations = [
+                    'Tetap semangat. Setiap usaha tidak mengkhianati hasil.',
+                    'Percaya pada diri sendiri. Anda lebih kuat dari yang dikira.',
+                    'Hari sulit tidak selamanya. Besok adalah hari baru.',
+                    'Jangan menyerah. Kesuksesan tinggal selangkah lagi.',
+                    'Setelah badai pasti ada pelangi. Tetap tegar.'
+                ];
+                return motivations[Math.floor(Math.random() * motivations.length)];
+            }
+
+            // Jokes
+            if (lowerMsg.includes('lucu') || lowerMsg.includes('joke') || lowerMsg.includes('lelucon') || lowerMsg.includes('ketawa')) {
+                const jokes = [
+                    'Kenapa programmer selalu dingin? Karena sering kerja di Windows.',
+                    'Bedanya kopi dengan kamu? Kopi bikin melek, kamu bikin bengong.',
+                    'Kenapa komputer nggak bisa tidur? Terlalu banyak byte.',
+                    'Kenapa lampu jatuh cinta? Karena selalu menyala.',
+                    'Bahasa Jepangnya capek? Yamateeeee~'
+                ];
+                return jokes[Math.floor(Math.random() * jokes.length)];
+            }
+
+            // Rekomendasi Film
+            if ((lowerMsg.includes('rekomendasi') || lowerMsg.includes('saran')) && (lowerMsg.includes('film') || lowerMsg.includes('movie'))) {
+                return 'Film populer:\n• Inception (Thriller)\n• Interstellar (Sci-fi)\n• The Shawshank Redemption (Drama)\n• Parasite (Thriller Korea)\n• Your Name (Anime)';
+            }
+            
+            // Rekomendasi Musik
+            if ((lowerMsg.includes('rekomendasi') || lowerMsg.includes('saran')) && (lowerMsg.includes('musik') || lowerMsg.includes('lagu'))) {
+                return 'Genre populer:\n• Pop - santai\n• Jazz - relaksasi\n• Rock - energi\n• Lo-fi - fokus\n• Classical - konsentrasi';
+            }
+            
+            // Rekomendasi Buku
+            if ((lowerMsg.includes('rekomendasi') || lowerMsg.includes('saran')) && lowerMsg.includes('buku')) {
+                return 'Buku bagus:\n• Atomic Habits - James Clear\n• Sapiens - Yuval Noah Harari\n• The Psychology of Money - Morgan Housel\n• Ego is the Enemy - Ryan Holiday\n• Deep Work - Cal Newport';
+            }
+
+            // Coding
+            if (lowerMsg.includes('coding') || lowerMsg.includes('programming') || lowerMsg.includes('belajar code')) {
+                return 'Tips belajar coding:\n1. Mulai HTML, CSS, JavaScript\n2. Praktik di freeCodeCamp\n3. Buat project kecil\n4. Join komunitas\n5. Konsisten setiap hari';
+            }
+
+            // Kesehatan
+            if (lowerMsg.includes('sehat') || lowerMsg.includes('olahraga') || lowerMsg.includes('diet')) {
+                return 'Tips sehat:\n• Olahraga 30 menit/hari\n• Minum 8 gelas air/hari\n• Tidur 7-8 jam/malam\n• Makan bergizi seimbang\n• Kurangi stress';
+            }
+
+            // Makanan
+            if (lowerMsg.includes('makan') || lowerMsg.includes('lapar') || lowerMsg.includes('food') || lowerMsg.includes('resep')) {
+                const foods = [
+                    'Mie goreng dengan telur dan sayuran',
+                    'Pizza dengan topping favorit',
+                    'Nasi goreng kampung dengan kerupuk',
+                    'Salad segar dengan dressing lemon',
+                    'Burger homemade dengan patty juicy'
+                ];
+                return foods[Math.floor(Math.random() * foods.length)];
+            }
+
+            // AI & Technology
+            if (lowerMsg.includes('apa itu ai') || lowerMsg.includes('apa itu artificial intelligence') || lowerMsg.includes('apa itu kecerdasan buatan')) {
+                return 'AI = teknologi yang memungkinkan mesin belajar dan berpikir seperti manusia. Digunakan di voice assistant (Siri, Alexa), rekomendasi (Netflix, Spotify), mobil otonom, diagnostik kesehatan, dan customer service.';
+            }
+
+            // Python
+            if (lowerMsg.includes('apa itu python') || lowerMsg.includes('python')) {
+                return 'Python = bahasa pemrograman populer, mudah dipelajari, untuk web development, data science, AI, automation, dan machine learning.';
+            }
+
+            // JavaScript
+            if (lowerMsg.includes('apa itu javascript') || lowerMsg.includes('javascript')) {
+                return 'JavaScript = bahasa pemrograman untuk web development, membuat website interaktif, dijalankan di browser dan server (Node.js).';
+            }
+
+            // Internet
+            if (lowerMsg.includes('apa itu internet') || lowerMsg.includes('internet')) {
+                return 'Internet = jaringan komputer global yang menghubungkan jutaan perangkat di seluruh dunia untuk berbagi informasi dan berkomunikasi.';
+            }
+
+            // Sepak Bola & Olahraga
+            if (lowerMsg.includes('pelatih') || lowerMsg.includes('coach') || lowerMsg.includes('manager')) {
+                if (lowerMsg.includes('timnas') || lowerMsg.includes('indonesia') || lowerMsg.includes('garuda')) {
+                    return 'Pelatih Timnas Indonesia saat ini adalah Shin Tae-yong (sejak 2019).';
+                }
+                if (lowerMsg.includes('madrid') || lowerMsg.includes('real madrid')) {
+                    return 'Pelatih Real Madrid saat ini adalah Carlo Ancelotti.';
+                }
+                if (lowerMsg.includes('barcelona') || lowerMsg.includes('barca')) {
+                    return 'Pelatih Barcelona saat ini adalah Xavi Hernández.';
+                }
+                if (lowerMsg.includes('liverpool')) {
+                    return 'Pelatih Liverpool saat ini adalah Arne Slot.';
+                }
+                if (lowerMsg.includes('mu') || lowerMsg.includes('manchester united')) {
+                    return 'Pelatih Manchester United saat ini adalah Erik ten Hag.';
+                }
+            }
+
+            if (lowerMsg.includes('presiden indonesia') || lowerMsg.includes('presiden ri')) {
+                return 'Presiden Indonesia saat ini adalah Prabowo Subianto (2024-2029).';
+            }
+
+            if (lowerMsg.includes('ibu kota') && lowerMsg.includes('indonesia')) {
+                return 'Ibu kota Indonesia adalah Jakarta (administratif) dan Nusantara (IKN, sedang dibangun).';
+            }
+
+            if (lowerMsg.includes('ibu kota')) {
+                if (lowerMsg.includes('jepang')) return 'Tokyo';
+                if (lowerMsg.includes('korea')) return 'Seoul';
+                if (lowerMsg.includes('inggris')) return 'London';
+                if (lowerMsg.includes('amerika')) return 'Washington D.C.';
+                if (lowerMsg.includes('prancis')) return 'Paris';
+                if (lowerMsg.includes('jerman')) return 'Berlin';
+                if (lowerMsg.includes('italia')) return 'Roma';
+                if (lowerMsg.includes('china')) return 'Beijing';
+                if (lowerMsg.includes('malaysia')) return 'Kuala Lumpur';
+                if (lowerMsg.includes('singapura')) return 'Singapura';
+                if (lowerMsg.includes('thailand')) return 'Bangkok';
+            }
+
+            // Populasi & Geografis
+            if (lowerMsg.includes('negara terbesar') || lowerMsg.includes('negara terluas')) {
+                return 'Negara terluas di dunia adalah Rusia (17,1 juta km²).';
+            }
+
+            if (lowerMsg.includes('negara terkecil')) {
+                return 'Negara terkecil di dunia adalah Vatikan (0,44 km²).';
+            }
+
+            if (lowerMsg.includes('gunung tertinggi')) {
+                if (lowerMsg.includes('indonesia')) return 'Gunung tertinggi di Indonesia adalah Puncak Jaya (4.884 m).';
+                return 'Gunung tertinggi di dunia adalah Everest (8.849 m).';
+            }
+
+            // Sains & Teknologi
+            if (lowerMsg.includes('kecepatan cahaya')) {
+                return 'Kecepatan cahaya adalah 299.792.458 meter per detik (≈300.000 km/s).';
+            }
+
+            if (lowerMsg.includes('planet')) {
+                if (lowerMsg.includes('terbesar')) return 'Planet terbesar di tata surya adalah Jupiter.';
+                if (lowerMsg.includes('terkecil')) return 'Planet terkecil di tata surya adalah Merkurius.';
+                if (lowerMsg.includes('terdekat')) return 'Planet terdekat dengan matahari adalah Merkurius.';
+                return 'Ada 8 planet di tata surya: Merkurius, Venus, Bumi, Mars, Jupiter, Saturnus, Uranus, Neptunus.';
+            }
+
+            // Sejarah
+            if (lowerMsg.includes('perang dunia')) {
+                if (lowerMsg.includes('1') || lowerMsg.includes('pertama')) return 'Perang Dunia I: 1914-1918';
+                if (lowerMsg.includes('2') || lowerMsg.includes('kedua')) return 'Perang Dunia II: 1939-1945';
+            }
+
+            if (lowerMsg.includes('kemerdekaan indonesia') || lowerMsg.includes('merdeka indonesia')) {
+                return 'Indonesia merdeka pada 17 Agustus 1945, diproklamasikan oleh Soekarno dan Mohammad Hatta.';
+            }
+
+            // Bahasa
+            if (lowerMsg.includes('how to say') || lowerMsg.includes('bahasa inggris')) {
+                if (lowerMsg.includes('terima kasih')) return 'Thank you';
+                if (lowerMsg.includes('selamat pagi')) return 'Good morning';
+                if (lowerMsg.includes('selamat malam')) return 'Good night';
+                if (lowerMsg.includes('apa kabar')) return 'How are you?';
+            }
+
+            // Mata Uang
+            if (lowerMsg.includes('kurs') || lowerMsg.includes('nilai tukar')) {
+                return 'Untuk informasi kurs terkini, cek Google "kurs mata uang" atau aplikasi finansial.';
+            }
+
+            // Terima kasih
+            if (lowerMsg.includes('terima kasih') || lowerMsg.includes('thanks') || lowerMsg.includes('makasih') || lowerMsg.includes('thank you')) {
+                return 'Sama-sama.';
+            }
+
+            // Perpisahan
+            if (lowerMsg.includes('selamat tinggal') || lowerMsg.includes('bye') || lowerMsg.includes('dadah') || lowerMsg.includes('sampai jumpa')) {
+                return 'Sampai jumpa!';
+            }
+
+            // Default - Bot mencoba memberikan respons umum
+            return 'Saya belum memiliki informasi spesifik tentang itu. Coba tanyakan hal lain seperti: matematika, waktu, rekomendasi film/musik, coding, kesehatan, atau fakta umum.';
+        }
+
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            sendBtn.disabled = true;
+            addMessageToDOM(text, true);
+            messageInput.value = '';
+
+            showTypingIndicator();
+
+            // Reduced delay untuk response lebih cepat
+            await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 400));
+
+            removeTypingIndicator();
+            const response = generateResponse(text);
+            addMessageToDOM(response, false);
+            
+            playNotificationSound();
+
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function clearChat() {
+            if (confirm('Yakin ingin menghapus semua chat?')) {
+                messages = [];
+                if (saveHistory) {
+                    sessionStorage.removeItem('chatMessages');
+                }
+                chatContainer.innerHTML = `
+                    <div class="welcome-message">
+                        <h2>Selamat Datang!</h2>
+                        <p>Mulai percakapan dengan mengetik pesan di bawah</p>
+                    </div>
+                `;
+                playNotificationSound();
+            }
+        }
+
+        // Initialize
+        loadSettings();
+        loadMessages();
+        messageInput.focus();
+    </script>
+</body>
+</html>
