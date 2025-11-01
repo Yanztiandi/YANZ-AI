@@ -951,9 +951,102 @@
                 return 'Buku bagus:\n• Atomic Habits - James Clear\n• Sapiens - Yuval Noah Harari\n• The Psychology of Money - Morgan Housel\n• Ego is the Enemy - Ryan Holiday\n• Deep Work - Cal Newport';
             }
 
-            // Coding
-            if (lowerMsg.includes('coding') || lowerMsg.includes('programming') || lowerMsg.includes('belajar code')) {
+            // Coding & Programming
+            if (lowerMsg.includes('belajar coding') || lowerMsg.includes('belajar programming') || lowerMsg.includes('cara belajar code')) {
                 return 'Tips belajar coding:\n1. Mulai HTML, CSS, JavaScript\n2. Praktik di freeCodeCamp\n3. Buat project kecil\n4. Join komunitas\n5. Konsisten setiap hari';
+            }
+
+            // HTML Code Requests
+            if ((lowerMsg.includes('buatkan') || lowerMsg.includes('buat') || lowerMsg.includes('code')) && lowerMsg.includes('html')) {
+                if (lowerMsg.includes('button') || lowerMsg.includes('tombol')) {
+                    return '```html\n<button onclick="alert(\'Tombol diklik!\')">Klik Saya</button>\n\n<style>\nbutton {\n  background: #667eea;\n  color: white;\n  padding: 10px 20px;\n  border: none;\n  border-radius: 5px;\n  cursor: pointer;\n}\nbutton:hover {\n  background: #5568d3;\n}\n</style>\n```';
+                }
+                if (lowerMsg.includes('form') || lowerMsg.includes('formulir')) {
+                    return '```html\n<form onsubmit="alert(\'Form dikirim!\'); return false;">\n  <input type="text" placeholder="Nama" required>\n  <input type="email" placeholder="Email" required>\n  <button type="submit">Kirim</button>\n</form>\n\n<style>\nform { display: flex; flex-direction: column; gap: 10px; max-width: 300px; }\ninput { padding: 10px; border: 1px solid #ddd; border-radius: 5px; }\nbutton { background: #667eea; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; }\n</style>\n```';
+                }
+                if (lowerMsg.includes('navbar') || lowerMsg.includes('menu')) {
+                    return '```html\n<nav>\n  <a href="#home">Home</a>\n  <a href="#about">About</a>\n  <a href="#contact">Contact</a>\n</nav>\n\n<style>\nnav { display: flex; gap: 20px; background: #667eea; padding: 15px; }\nnav a { color: white; text-decoration: none; }\nnav a:hover { text-decoration: underline; }\n</style>\n```';
+                }
+                if (lowerMsg.includes('card') || lowerMsg.includes('kartu')) {
+                    return '```html\n<div class="card">\n  <h3>Judul Card</h3>\n  <p>Ini adalah deskripsi card yang menarik.</p>\n  <button>Selengkapnya</button>\n</div>\n\n<style>\n.card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px; }\n.card h3 { margin: 0 0 10px 0; color: #333; }\n.card p { color: #666; margin-bottom: 15px; }\n.card button { background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; }\n</style>\n```';
+                }
+                return '```html\n<!DOCTYPE html>\n<html>\n<head>\n  <title>Website Saya</title>\n</head>\n<body>\n  <h1>Hello World!</h1>\n  <p>Website HTML sederhana</p>\n</body>\n</html>\n```';
+            }
+
+            // JavaScript Code Requests
+            if ((lowerMsg.includes('buatkan') || lowerMsg.includes('buat') || lowerMsg.includes('code')) && (lowerMsg.includes('javascript') || lowerMsg.includes('js'))) {
+                if (lowerMsg.includes('function') || lowerMsg.includes('fungsi')) {
+                    return '```javascript\n// Function untuk penjumlahan\nfunction tambah(a, b) {\n  return a + b;\n}\n\n// Cara pakai:\nconsole.log(tambah(5, 3)); // Output: 8\n```';
+                }
+                if (lowerMsg.includes('array') || lowerMsg.includes('loop')) {
+                    return '```javascript\n// Loop array\nconst buah = [\'apel\', \'jeruk\', \'mangga\'];\n\nbuah.forEach(item => {\n  console.log(item);\n});\n\n// Atau pakai for loop\nfor (let i = 0; i < buah.length; i++) {\n  console.log(buah[i]);\n}\n```';
+                }
+                if (lowerMsg.includes('fetch') || lowerMsg.includes('api')) {
+                    return '```javascript\n// Fetch API\nasync function getData() {\n  try {\n    const response = await fetch(\'https://api.example.com/data\');\n    const data = await response.json();\n    console.log(data);\n  } catch (error) {\n    console.error(\'Error:\', error);\n  }\n}\n\ngetData();\n```';
+                }
+                if (lowerMsg.includes('kalkulator') || lowerMsg.includes('calculator')) {
+                    return '```javascript\n// Kalkulator sederhana\nfunction kalkulator(angka1, operator, angka2) {\n  switch(operator) {\n    case \'+\': return angka1 + angka2;\n    case \'-\': return angka1 - angka2;\n    case \'*\': return angka1 * angka2;\n    case \'/\': return angka1 / angka2;\n    default: return \'Operator tidak valid\';\n  }\n}\n\nconsole.log(kalkulator(10, \'+\', 5)); // 15\n```';
+                }
+                return '```javascript\n// JavaScript dasar\nconst nama = \'YANZ AI\';\nconsole.log(\'Halo dari \' + nama);\n\n// Function\nfunction sapa(nama) {\n  return `Halo, ${nama}!`;\n}\n\nconsole.log(sapa(\'User\'));\n```';
+            }
+
+            // Python Code Requests
+            if ((lowerMsg.includes('buatkan') || lowerMsg.includes('buat') || lowerMsg.includes('code')) && lowerMsg.includes('python')) {
+                if (lowerMsg.includes('function') || lowerMsg.includes('fungsi')) {
+                    return '```python\n# Function Python\ndef tambah(a, b):\n    return a + b\n\n# Cara pakai:\nhasil = tambah(5, 3)\nprint(hasil)  # Output: 8\n```';
+                }
+                if (lowerMsg.includes('list') || lowerMsg.includes('loop')) {
+                    return '```python\n# Loop list Python\nbuah = [\'apel\', \'jeruk\', \'mangga\']\n\nfor item in buah:\n    print(item)\n\n# List comprehension\nangka_kuadrat = [x**2 for x in range(1, 6)]\nprint(angka_kuadrat)  # [1, 4, 9, 16, 25]\n```';
+                }
+                if (lowerMsg.includes('class') || lowerMsg.includes('oop')) {
+                    return '```python\n# Class Python\nclass Person:\n    def __init__(self, nama, umur):\n        self.nama = nama\n        self.umur = umur\n    \n    def perkenalan(self):\n        return f"Halo, nama saya {self.nama}, umur {self.umur}"\n\n# Cara pakai:\norang = Person("Budi", 25)\nprint(orang.perkenalan())\n```';
+                }
+                if (lowerMsg.includes('kalkulator') || lowerMsg.includes('calculator')) {
+                    return '```python\n# Kalkulator Python\ndef kalkulator(angka1, operator, angka2):\n    if operator == \'+\':\n        return angka1 + angka2\n    elif operator == \'-\':\n        return angka1 - angka2\n    elif operator == \'*\':\n        return angka1 * angka2\n    elif operator == \'/\':\n        return angka1 / angka2\n    else:\n        return "Operator tidak valid"\n\nprint(kalkulator(10, \'+\', 5))  # 15\n```';
+                }
+                return '```python\n# Python dasar\nnama = "YANZ AI"\nprint(f"Halo dari {nama}")\n\n# Function\ndef sapa(nama):\n    return f"Halo, {nama}!"\n\nprint(sapa("User"))\n```';
+            }
+
+            // CSS Code Requests
+            if ((lowerMsg.includes('buatkan') || lowerMsg.includes('buat') || lowerMsg.includes('code')) && lowerMsg.includes('css')) {
+                if (lowerMsg.includes('gradient') || lowerMsg.includes('warna')) {
+                    return '```css\n/* Gradient Background */\n.gradient {\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  padding: 20px;\n  border-radius: 10px;\n  color: white;\n}\n```';
+                }
+                if (lowerMsg.includes('animation') || lowerMsg.includes('animasi')) {
+                    return '```css\n/* Animasi Fade In */\n@keyframes fadeIn {\n  from { opacity: 0; transform: translateY(20px); }\n  to { opacity: 1; transform: translateY(0); }\n}\n\n.animate {\n  animation: fadeIn 0.5s ease-in;\n}\n```';
+                }
+                if (lowerMsg.includes('flex') || lowerMsg.includes('flexbox')) {
+                    return '```css\n/* Flexbox Layout */\n.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 20px;\n  flex-wrap: wrap;\n}\n```';
+                }
+                return '```css\n/* CSS Dasar */\n.box {\n  background: #667eea;\n  color: white;\n  padding: 20px;\n  border-radius: 10px;\n  box-shadow: 0 4px 6px rgba(0,0,0,0.1);\n  transition: all 0.3s;\n}\n\n.box:hover {\n  transform: translateY(-5px);\n  box-shadow: 0 8px 12px rgba(0,0,0,0.2);\n}\n```';
+            }
+
+            // React Code Requests
+            if ((lowerMsg.includes('buatkan') || lowerMsg.includes('buat') || lowerMsg.includes('code')) && lowerMsg.includes('react')) {
+                if (lowerMsg.includes('component') || lowerMsg.includes('komponen')) {
+                    return '```jsx\n// React Component\nimport { useState } from \'react\';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <h2>Count: {count}</h2>\n      <button onClick={() => setCount(count + 1)}>+</button>\n      <button onClick={() => setCount(count - 1)}>-</button>\n    </div>\n  );\n}\n\nexport default Counter;\n```';
+                }
+                if (lowerMsg.includes('form') || lowerMsg.includes('formulir')) {
+                    return '```jsx\n// React Form\nimport { useState } from \'react\';\n\nfunction Form() {\n  const [nama, setNama] = useState(\'\');\n\n  const handleSubmit = (e) => {\n    e.preventDefault();\n    alert(`Halo, ${nama}!`);\n  };\n\n  return (\n    <form onSubmit={handleSubmit}>\n      <input \n        value={nama}\n        onChange={(e) => setNama(e.target.value)}\n        placeholder="Nama"\n      />\n      <button type="submit">Kirim</button>\n    </form>\n  );\n}\n\nexport default Form;\n```';
+                }
+                return '```jsx\n// React Component Dasar\nfunction App() {\n  return (\n    <div>\n      <h1>Hello from React!</h1>\n      <p>Component sederhana</p>\n    </div>\n  );\n}\n\nexport default App;\n```';
+            }
+
+            // SQL Code Requests
+            if ((lowerMsg.includes('buatkan') || lowerMsg.includes('buat') || lowerMsg.includes('code')) && (lowerMsg.includes('sql') || lowerMsg.includes('database'))) {
+                if (lowerMsg.includes('select') || lowerMsg.includes('query')) {
+                    return '```sql\n-- SELECT Query\nSELECT * FROM users WHERE age > 18;\n\n-- JOIN Query\nSELECT users.nama, orders.total \nFROM users \nINNER JOIN orders ON users.id = orders.user_id;\n```';
+                }
+                if (lowerMsg.includes('insert') || lowerMsg.includes('tambah')) {
+                    return '```sql\n-- INSERT Data\nINSERT INTO users (nama, email, age) \nVALUES (\'John Doe\', \'john@email.com\', 25);\n\n-- INSERT Multiple\nINSERT INTO users (nama, email) VALUES \n(\'Alice\', \'alice@email.com\'),\n(\'Bob\', \'bob@email.com\');\n```';
+                }
+                if (lowerMsg.includes('update') || lowerMsg.includes('ubah')) {
+                    return '```sql\n-- UPDATE Data\nUPDATE users \nSET email = \'newemail@email.com\' \nWHERE id = 1;\n\n-- UPDATE Multiple\nUPDATE users \nSET age = age + 1 \nWHERE age < 18;\n```';
+                }
+                if (lowerMsg.includes('delete') || lowerMsg.includes('hapus')) {
+                    return '```sql\n-- DELETE Data\nDELETE FROM users WHERE id = 1;\n\n-- DELETE dengan kondisi\nDELETE FROM users WHERE age < 13;\n```';
+                }
+                return '```sql\n-- CREATE Table\nCREATE TABLE users (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  nama VARCHAR(100) NOT NULL,\n  email VARCHAR(100) UNIQUE,\n  age INT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n```';
             }
 
             // Kesehatan
